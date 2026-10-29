@@ -1,0 +1,24 @@
+QUIZ LOCAL — CASA DO ARTESANATO
+
+Abra dist/index.html no navegador. Funciona sem instalação, sem internet e sem servidor.
+
+Estrutura inspirada na referência analisada: coluna única de aproximadamente 440 px, logo centralizado, progresso, conteúdo dividido em etapas e botões grandes.
+
+Fluxo:
+1. Promessa + imagem do produto + botão de início.
+2. Objetivo.
+3. Experiência.
+4. Dificuldade.
+5. Tela de conexão e explicação do material.
+6. Estilo visual.
+7. Primeira peça.
+8. Resumo do perfil.
+9. Recomendação + apresentação do kit + oferta + dúvidas.
+
+As opções avançam automaticamente. Voltar preserva as respostas. Tudo fica na memória da página, sem envio ou coleta de dados.
+
+Antes de vender: vincular os moldes reais aos perfis; conferir o conteúdo; definir preço e checkout em config no começo de dist/app.js.
+
+Preço não informado. Compra desativada nesta prévia.
+
+A imagem do kit foi fornecida pelo usuário. Os quatro estilos são composições ilustrativas locais em SVG.
