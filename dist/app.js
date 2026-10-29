@@ -33,7 +33,7 @@ document.querySelector('#back').onclick=()=>go(current-1);render();
 
 // A oferta é aberta dentro da própria landing page; a navegação só acontece
 // quando a pessoa confirma o acesso no botão do popup.
-document.addEventListener('click',event=>{const button=event.target.closest('#checkout');if(!button)return;event.preventDefault();event.stopImmediatePropagation();document.querySelector('#discount-modal')?.showModal()},true);
+document.addEventListener('click',event=>{const button=event.target.closest('#checkout');if(!button)return;event.preventDefault();event.stopImmediatePropagation();window.location.assign(config.checkoutUrl)},true);
 document.addEventListener('click',event=>{const button=event.target.closest('#modal-checkout');if(!button)return;event.preventDefault();event.stopImmediatePropagation();document.querySelector('#discount-modal')?.close()},true);
 setTimeout(()=>document.querySelector('#discount-modal')?.close(),220);
-const offerPopupStyle=document.createElement('style');offerPopupStyle.textContent='.discount-native .modal-x{display:none!important}';document.head.append(offerPopupStyle);
+const offerPopupStyle=document.createElement('style');offerPopupStyle.textContent='.discount-native{display:none!important}';document.head.append(offerPopupStyle);
