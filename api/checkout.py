@@ -1,4 +1,4 @@
-"""Função serverless da Vercel para criar o checkout hospedado AmploPay."""
+"""Função serverless da Vercel para gerar uma transação Pix AmploPay."""
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler
 
@@ -20,8 +20,17 @@ class handler(BaseHTTPRequestHandler):
             host = self.headers.get("host", "").strip()
             if host:
                 server.PUBLIC_BASE_URL = f"https://{host}"
-            checkout = server.request_amplopay(server.build_checkout(server.parse_request(self)))
-            self._send_json(HTTPStatus.OK, {"checkoutUrl": checkout["checkoutUrl"]})
+            order, amount = server.build_pix_order(server.parse_request(self))
+            transaction = server.request_amplopay("/gateway/pix/receive", order)
+            pix = transaction.get("pix") if isinstance(transaction.get("pix"), dict) else {}
+            code = pix.get("code")
+            if not transaction.get("transactionId") or not isinstance(code, str) or not code:
+                raise RuntimeError("A AmploPay não retornou o QR Code Pix. Confira a transação no painel antes de tentar novamente.")
+            self._send_json(HTTPStatus.OK, {
+                "transactionId": transaction["transactionId"],
+                "total": amount,
+                "pix": {"code": code, "image": pix.get("image"), "expiresAt": pix.get("expiresAt")},
+            })
         except ValueError as error:
             self._send_json(HTTPStatus.BAD_REQUEST, {"message": str(error)})
         except RuntimeError as error:

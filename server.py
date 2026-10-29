@@ -6,6 +6,7 @@ import json
 import os
 import re
 import sys
+import uuid
 from http import HTTPStatus
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -14,16 +15,16 @@ from urllib.request import Request, urlopen
 
 ROOT = Path(__file__).resolve().parent / "dist"
 PORT = int(os.getenv("PORT", "8765"))
-API_BASE = os.getenv("AMPLOPAY_API_BASE", "https://app.amplopay.com/api/v1").rstrip("/")
+API_BASE = os.getenv("AMPLO_API_BASE", os.getenv("AMPLOPAY_API_BASE", "https://app.amplopay.com/api/v1")).rstrip("/")
 PUBLIC_BASE_URL = os.getenv("PUBLIC_BASE_URL", f"http://127.0.0.1:{PORT}").rstrip("/")
-PUBLIC_KEY = os.getenv("AMPLOPAY_PUBLIC_KEY", "")
-SECRET_KEY = os.getenv("AMPLOPAY_SECRET_KEY", "")
+PUBLIC_KEY = os.getenv("AMPLO_PUBLIC_KEY", os.getenv("AMPLOPAY_PUBLIC_KEY", "")).strip()
+SECRET_KEY = os.getenv("AMPLO_SECRET_KEY", os.getenv("AMPLOPAY_SECRET_KEY", "")).strip()
 
 # O navegador nunca envia preço. O servidor monta o pedido a partir deste catálogo.
 BUMP_CATALOG = {
-    "christmas": {"name": "Moldes natalinos", "price": 9.90},
-    "guide": {"name": "Guia de produção", "price": 6.90},
-    "materials": {"name": "Lista de materiais", "price": 7.90},
+    "christmas": {"sku": "moldes-natalinos", "name": "Moldes natalinos", "price": 9.90},
+    "guide": {"sku": "guia-producao", "name": "Guia de produção", "price": 6.90},
+    "materials": {"sku": "lista-materiais", "name": "Lista de materiais", "price": 7.90},
 }
 BASE_PRICE = 10.00
 
@@ -54,11 +55,18 @@ def parse_request(handler: SimpleHTTPRequestHandler) -> dict:
     return body
 
 
-def build_checkout(data: dict) -> dict:
+def build_pix_order(data: dict) -> tuple[dict, float]:
     customer = data.get("customer") if isinstance(data.get("customer"), dict) else {}
+    name = str(customer.get("name", "")).strip()
     email = str(customer.get("email", "")).strip()
-    if not re.fullmatch(r"[^\s@]+@[^\s@]+\.[^\s@]+", email):
-        raise ValueError("Informe um e-mail válido para continuar.")
+    phone = re.sub(r"\D", "", str(customer.get("phone", "")))
+    document = re.sub(r"\D", "", str(customer.get("document", "")))
+    if len(name) < 2:
+        raise ValueError("Informe o nome do comprador.")
+    if not re.fullmatch(r"[^\s@]+@[^\s@]+\.[^\s@]+", email) or not 10 <= len(phone) <= 13:
+        raise ValueError("Informe nome, e-mail e telefone válidos para gerar o Pix.")
+    if len(document) not in (11, 14):
+        raise ValueError("Informe um CPF ou CNPJ válido para gerar o Pix.")
 
     bump_ids = data.get("bumpIds", [])
     if not isinstance(bump_ids, list):
@@ -66,53 +74,40 @@ def build_checkout(data: dict) -> dict:
     bump_ids = list(dict.fromkeys(item for item in bump_ids if item in BUMP_CATALOG))
     extras = [BUMP_CATALOG[item] for item in bump_ids]
     amount = round(BASE_PRICE + sum(item["price"] for item in extras), 2)
-    offer_name = "300 Moldes de Mesa Posta"
-    if extras:
-        offer_name += " + " + ", ".join(item["name"] for item in extras)
-
-    prefill = {"email": email}
-    phone = str(customer.get("phone", "")).strip()
-    document = re.sub(r"\D", "", str(customer.get("document", "")))
-    if phone:
-        prefill["phone"] = phone
-    if document:
-        prefill["document"] = document
-
-    return {
-        "product": {
-            "externalId": "casa-do-artesanato-300-moldes-mesa-posta",
-            "name": "300 Moldes de Mesa Posta",
-            "photos": [f"{PUBLIC_BASE_URL}/assets/cover-300-moldes.webp"],
-            "offer": {
-                "name": offer_name,
-                "price": amount,
-                "offerType": "NATIONAL",
-                "currency": "BRL",
-                "lang": "pt-BR",
-                "warranty": "7_days",
-                "category": "Artesanato",
-            },
-        },
-        "settings": {
-            "paymentMethods": ["PIX", "CREDIT_CARD"],
-            "acceptedDocs": ["CPF", "CNPJ"],
-            "askForAddress": False,
-            "thankYouPage": f"{PUBLIC_BASE_URL}/success.html",
-        },
-        "customer": prefill,
-        "trackProps": {
-            "source": "checkout-casa-do-artesanato",
+    products = [{
+        "id": "300-moldes-mesa-posta",
+        "name": "300 Moldes de Mesa Posta",
+        "quantity": 1,
+        "price": BASE_PRICE,
+        "physical": False,
+    }]
+    products.extend({
+        "id": item["sku"],
+        "name": item["name"],
+        "quantity": 1,
+        "price": item["price"],
+        "physical": False,
+    } for item in extras)
+    identifier = f"mesa_{uuid.uuid4().hex}"
+    order = {
+        "identifier": identifier,
+        "amount": amount,
+        "client": {"name": name, "email": email, "phone": phone[-11:], "document": document},
+        "products": products,
+        "metadata": {
+            "provider": "Casa do Artesanato",
+            "orderId": identifier,
             "selectedBumps": ",".join(bump_ids),
-            "amount": f"{amount:.2f}",
         },
     }
+    return order, amount
 
 
-def request_amplopay(payload: dict) -> dict:
+def request_amplopay(path: str, payload: dict) -> dict:
     if not PUBLIC_KEY or not SECRET_KEY:
         raise RuntimeError("Integração ainda não configurada. Defina as chaves do AmploPay no servidor.")
     request = Request(
-        f"{API_BASE}/gateway/checkout",
+        f"{API_BASE}{path}",
         data=json.dumps(payload).encode("utf-8"),
         headers={"Content-Type": "application/json", "Accept": "application/json", "x-public-key": PUBLIC_KEY, "x-secret-key": SECRET_KEY},
         method="POST",
@@ -134,8 +129,8 @@ def request_amplopay(payload: dict) -> dict:
         ) from error
     except (URLError, TimeoutError) as error:
         raise RuntimeError("Não foi possível falar com a AmploPay. Tente novamente.") from error
-    if not isinstance(result, dict) or not result.get("checkoutUrl"):
-        raise RuntimeError(result.get("message") if isinstance(result, dict) else "A AmploPay não retornou o link de pagamento.")
+    if not isinstance(result, dict):
+        raise RuntimeError("A AmploPay retornou uma resposta inválida.")
     return result
 
 
@@ -154,8 +149,17 @@ class CheckoutHandler(SimpleHTTPRequestHandler):
             send_json(self, HTTPStatus.NOT_FOUND, {"message": "Rota não encontrada."})
             return
         try:
-            checkout = request_amplopay(build_checkout(parse_request(self)))
-            send_json(self, HTTPStatus.OK, {"checkoutUrl": checkout["checkoutUrl"]})
+            order, amount = build_pix_order(parse_request(self))
+            transaction = request_amplopay("/gateway/pix/receive", order)
+            pix = transaction.get("pix") if isinstance(transaction.get("pix"), dict) else {}
+            code = pix.get("code")
+            if not transaction.get("transactionId") or not isinstance(code, str) or not code:
+                raise RuntimeError("A AmploPay não retornou o QR Code Pix. Confira a transação no painel antes de tentar novamente.")
+            send_json(self, HTTPStatus.OK, {
+                "transactionId": transaction["transactionId"],
+                "total": amount,
+                "pix": {"code": code, "image": pix.get("image"), "expiresAt": pix.get("expiresAt")},
+            })
         except ValueError as error:
             send_json(self, HTTPStatus.BAD_REQUEST, {"message": str(error)})
         except RuntimeError as error:

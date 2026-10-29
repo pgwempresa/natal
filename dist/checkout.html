@@ -17,6 +17,7 @@
       </div>
       <form id="checkout-form" novalidate>
         <div class="kw-fields">
+          <label><span>Nome completo</span><input id="customer-name" type="text" placeholder="Nome do comprador" autocomplete="name" required></label>
           <label><span>E-mail</span><input id="customer-email" type="email" placeholder="voce@exemplo.com" autocomplete="email" required></label>
           <label><span>Telefone</span><input id="customer-phone" type="tel" placeholder="(00) 00000-0000" autocomplete="tel"></label>
           <label><span>CPF ou CNPJ do comprador</span><input id="customer-document" type="text" placeholder="000.000.000-00" inputmode="numeric"></label>
@@ -49,6 +50,14 @@
         <div class="kw-payment pix-active"><button class="kw-pay" id="pay-pix" type="submit"><img class="pix-icon pay-pix-icon" src="assets/pix.webp" alt="">Pagar agora</button></div>
         <div class="kw-payment card-active" hidden><p class="kw-card-note">Você será direcionada ao ambiente seguro de pagamento para informar os dados do cartão.</p><button class="kw-pay" id="pay-card" type="submit">Ir para pagamento seguro</button></div>
         <p id="checkout-error" class="checkout-error" role="alert" aria-live="polite"></p>
+        <section id="pix-result" class="pix-result" hidden aria-live="polite">
+          <h2>Pix gerado com sucesso</h2>
+          <p>Escaneie o QR Code ou copie o código abaixo para pagar.</p>
+          <img id="pix-qr" alt="QR Code Pix">
+          <strong id="pix-total"></strong>
+          <textarea id="pix-code" readonly aria-label="Código Pix copia e cola"></textarea>
+          <button type="button" id="copy-pix" class="kw-pay">Copiar código Pix</button>
+        </section>
       </form>
       <div class="kw-trust">
         <div class="kw-trust-top"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 5 5v5c0 5 3.1 9.4 7 11 3.9-1.6 7-6 7-11V5l-7-3Zm0 4 3 1.3V10c0 3-1.7 5.8-3 6.7-1.3-.9-3-3.7-3-6.7V7.3L12 6Z"/></svg><p>Pagamento processado em ambiente seguro.</p></div>
@@ -69,7 +78,34 @@
     function updateTotal(){let value=baseAmount;const selected=[...document.querySelectorAll('.bump-option.selected')];selected.forEach(item=>value+=Number(item.dataset.price));bumpSummary.innerHTML=selected.map(item=>'<div class="bump-line"><span>'+item.dataset.label+'</span><b>+ '+money(Number(item.dataset.price))+'</b></div>').join('');total.textContent=money(value)}
     function toggleBump(item){item.classList.toggle('selected');item.setAttribute('aria-checked',String(item.classList.contains('selected')));updateTotal()}
     document.querySelectorAll('.bump-option').forEach(item=>{item.addEventListener('click',()=>toggleBump(item));item.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleBump(item)}})});
-    form.addEventListener('submit',async event=>{event.preventDefault();checkoutError.textContent='';const email=document.querySelector('#customer-email');if(!email.value.trim()||!email.checkValidity()){email.focus();checkoutError.textContent='Informe um e-mail válido para continuar.';return}const submit=selectedMethod==='pix'?document.querySelector('#pay-pix'):document.querySelector('#pay-card'),initialText=submit.textContent;submit.disabled=true;submit.textContent='Gerando checkout seguro…';try{const response=await fetch('/api/checkout',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({customer:{email:email.value.trim(),phone:document.querySelector('#customer-phone').value.trim(),document:document.querySelector('#customer-document').value.trim()},bumpIds:[...document.querySelectorAll('.bump-option.selected')].map(item=>item.dataset.id),paymentMethod:selectedMethod==='card'?'CREDIT_CARD':'PIX'})}),payload=await response.json();if(!response.ok||!payload.checkoutUrl)throw new Error(payload.message||'Não foi possível iniciar o pagamento.');window.location.assign(payload.checkoutUrl)}catch(error){checkoutError.textContent=error.message||'Não foi possível iniciar o pagamento. Tente novamente.';submit.disabled=false;submit.textContent=initialText}});
+    async function copyPixCode(){
+      const code=document.querySelector('#pix-code').value;
+      try{await navigator.clipboard.writeText(code)}catch{const input=document.querySelector('#pix-code');input.select();document.execCommand('copy')}
+      const button=document.querySelector('#copy-pix');const original=button.textContent;button.textContent='Código Pix copiado!';setTimeout(()=>button.textContent=original,1800);
+    }
+    function showPix(payload){
+      const pix=payload.pix||{},code=pix.code||'';
+      if(!code)throw new Error('A AmploPay não retornou o código Pix.');
+      const image=typeof pix.image==='string'&&pix.image.startsWith('https://')?pix.image:`https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=${encodeURIComponent(code)}`;
+      document.querySelector('#pix-qr').src=image;
+      document.querySelector('#pix-code').value=code;
+      document.querySelector('#pix-total').textContent=money(Number(payload.total)||baseAmount);
+      document.querySelector('#pix-result').hidden=false;
+      document.querySelector('#pix-result').scrollIntoView({behavior:'smooth',block:'start'});
+    }
+    document.querySelector('#copy-pix').addEventListener('click',copyPixCode);
+    form.addEventListener('submit',async event=>{
+      event.preventDefault();checkoutError.textContent='';document.querySelector('#pix-result').hidden=true;
+      if(selectedMethod!=='pix'){checkoutError.textContent='O cartão ainda não está disponível neste checkout. Selecione Pix para continuar.';return}
+      const name=document.querySelector('#customer-name'),email=document.querySelector('#customer-email'),phone=document.querySelector('#customer-phone'),documentInput=document.querySelector('#customer-document');
+      if(!name.value.trim()||!email.value.trim()||!email.checkValidity()||!phone.value.trim()||!documentInput.value.trim()){checkoutError.textContent='Preencha nome, e-mail, telefone e CPF ou CNPJ para gerar o Pix.';return}
+      const submit=document.querySelector('#pay-pix'),initialHtml=submit.innerHTML;submit.disabled=true;submit.textContent='Gerando Pix…';
+      try{
+        const response=await fetch('/api/checkout',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({customer:{name:name.value.trim(),email:email.value.trim(),phone:phone.value.trim(),document:documentInput.value.trim()},bumpIds:[...document.querySelectorAll('.bump-option.selected')].map(item=>item.dataset.id),paymentMethod:'PIX'})});
+        const payload=await response.json();if(!response.ok||!payload.pix?.code)throw new Error(payload.message||'Não foi possível gerar o Pix.');showPix(payload);
+      }catch(error){checkoutError.textContent=error.message||'Não foi possível gerar o Pix. Tente novamente.'}
+      finally{submit.disabled=false;submit.innerHTML=initialHtml}
+    });
   </script>
 </body>
 </html>
