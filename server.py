@@ -109,7 +109,7 @@ def request_amplopay(path: str, payload: dict) -> dict:
     request = Request(
         f"{API_BASE}{path}",
         data=json.dumps(payload).encode("utf-8"),
-        headers={"Content-Type": "application/json", "Accept": "application/json", "x-public-key": PUBLIC_KEY, "x-secret-key": SECRET_KEY},
+        headers={"Content-Type": "application/json", "Accept": "application/json", "User-Agent": "MesaAtelier/1.0", "x-public-key": PUBLIC_KEY, "x-secret-key": SECRET_KEY},
         method="POST",
     )
     try:
