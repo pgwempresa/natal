@@ -1,11 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "outputDirectory": "dist",
-  "functions": {
-    "api/checkout.py": {
-      "runtime": "python3.12"
-    }
-  },
   "headers": [
     {
       "source": "/assets/(.*)",
