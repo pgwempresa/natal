@@ -121,12 +121,15 @@ def request_amplopay(payload: dict) -> dict:
         with urlopen(request, timeout=20) as response:
             result = json.loads(response.read().decode("utf-8"))
     except HTTPError as error:
+        raw_response = error.read().decode("utf-8", errors="replace")
         try:
-            remote = json.loads(error.read().decode("utf-8", errors="replace"))
+            remote = json.loads(raw_response)
             message = remote.get("message") or remote.get("errorDescription")
         except (json.JSONDecodeError, AttributeError):
             message = None
-        raise RuntimeError(message or "A AmploPay recusou a criação do checkout.") from error
+        detail = message or raw_response[:500] or "Sem detalhes retornados pela AmploPay."
+        print(f"[AmploPay] HTTP {error.code}: {detail}", file=sys.stderr, flush=True)
+        raise RuntimeError(f"AmploPay recusou a criação do checkout (HTTP {error.code}): {detail}") from error
     except (URLError, TimeoutError) as error:
         raise RuntimeError("Não foi possível falar com a AmploPay. Tente novamente.") from error
     if not isinstance(result, dict) or not result.get("checkoutUrl"):
@@ -154,6 +157,7 @@ class CheckoutHandler(SimpleHTTPRequestHandler):
         except ValueError as error:
             send_json(self, HTTPStatus.BAD_REQUEST, {"message": str(error)})
         except RuntimeError as error:
+            print(f"[checkout] {error}", file=sys.stderr, flush=True)
             send_json(self, HTTPStatus.SERVICE_UNAVAILABLE, {"message": str(error)})
         except Exception:
             send_json(self, HTTPStatus.INTERNAL_SERVER_ERROR, {"message": "Não foi possível iniciar o pagamento. Tente novamente."})
