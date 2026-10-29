@@ -82,7 +82,7 @@ def build_checkout(data: dict) -> dict:
         "product": {
             "externalId": "casa-do-artesanato-300-moldes-mesa-posta",
             "name": "300 Moldes de Mesa Posta",
-            "photos": [f"{PUBLIC_BASE_URL}/assets/cover-300-moldes.png"],
+            "photos": [f"{PUBLIC_BASE_URL}/assets/cover-300-moldes.webp"],
             "offer": {
                 "name": offer_name,
                 "price": amount,
