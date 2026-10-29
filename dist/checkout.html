@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Finalizar compra · 300 Moldes de Mesa Posta</title>
+  <link rel="stylesheet" href="style.css?v=43">
+</head>
+<body class="kw-body">
+  <main class="kw-page">
+    <img class="kw-banner" src="assets/cover-300-moldes.png" alt="300 moldes de mesa posta em PDF">
+    <section class="kw-checkout">
+      <div class="kw-product">
+        <img src="assets/cover-300-moldes.png" alt="300 moldes" class="kw-thumb">
+        <div><h1>300 Moldes de Mesa Posta</h1><p>Entrega digital após a confirmação do pagamento.</p></div>
+      </div>
+      <form id="checkout-form" novalidate>
+        <div class="kw-fields">
+          <label><span>E-mail</span><input id="customer-email" type="email" placeholder="voce@exemplo.com" autocomplete="email" required></label>
+          <label><span>Telefone</span><input id="customer-phone" type="tel" placeholder="(00) 00000-0000" autocomplete="tel"></label>
+          <label><span>CPF ou CNPJ do comprador</span><input id="customer-document" type="text" placeholder="000.000.000-00" inputmode="numeric"></label>
+          <small>Informe os dados do responsável pela compra.</small>
+        </div>
+        <div class="kw-summary">
+          <div><span>300 Moldes de Mesa Posta</span><b>R$ 99,00</b></div>
+          <div class="kw-discount"><span>Condição especial</span><b>- R$ 89,00</b></div>
+          <div id="bump-summary"></div>
+          <div class="kw-total"><span>Total a pagar</span><strong id="order-total">R$ 10,00</strong></div>
+        </div>
+        <div class="kw-bumps">
+          <article class="bump-option" data-id="christmas" data-price="9.90" data-label="Moldes natalinos" role="checkbox" aria-checked="false" tabindex="0">
+            <strong>SIM, QUERO OS MOLDES NATALINOS! <small>+ R$ 9,90</small></strong>
+            <div><i>➜</i><em aria-hidden="true"></em><img class="bump-img" src="assets/preview-1.png" alt="Moldes natalinos"><p><b>OFERTA ESPECIAL:</b> modelos para Natal e fim de ano, prontos para imprimir.</p></div>
+          </article>
+          <article class="bump-option" data-id="guide" data-price="6.90" data-label="Guia de produção" role="checkbox" aria-checked="false" tabindex="0">
+            <strong>SIM, QUERO O GUIA DE PRODUÇÃO! <small>+ R$ 6,90</small></strong>
+            <div><i>➜</i><em aria-hidden="true"></em><img class="bump-img" src="assets/preview-2.png" alt="Guia de produção"><p><b>GUIA PRÁTICO:</b> passo a passo para imprimir, montar e organizar seus moldes.</p></div>
+          </article>
+          <article class="bump-option" data-id="materials" data-price="7.90" data-label="Lista de materiais" role="checkbox" aria-checked="false" tabindex="0">
+            <strong>SIM, QUERO A LISTA DE MATERIAIS! <small>+ R$ 7,90</small></strong>
+            <div><i>➜</i><em aria-hidden="true"></em><img class="bump-img" src="assets/preview-3.png" alt="Lista de materiais"><p><b>BÔNUS:</b> confira tudo o que separar antes de começar sua peça.</p></div>
+          </article>
+        </div>
+        <div class="kw-methods" aria-label="Forma de pagamento">
+          <button type="button" class="active" data-method="pix" aria-label="Pagar com Pix"><img class="pix-icon" src="assets/pix.png" alt=""><b>Pix</b><small>Aprovação imediata</small></button>
+          <button type="button" data-method="card" aria-label="Pagar com cartão"><svg class="card-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M2 10h20" stroke="currentColor" stroke-width="2"/></svg><b>Cartão</b><small>Crédito ou débito</small></button>
+        </div>
+        <div class="kw-payment pix-active"><button class="kw-pay" id="pay-pix" type="submit"><img class="pix-icon pay-pix-icon" src="assets/pix.png" alt="">Pagar agora</button></div>
+        <div class="kw-payment card-active" hidden><p class="kw-card-note">Você será direcionada ao ambiente seguro da AmploPay para informar os dados do cartão.</p><button class="kw-pay" id="pay-card" type="submit">Ir para pagamento seguro</button></div>
+        <p id="checkout-error" class="checkout-error" role="alert" aria-live="polite"></p>
+      </form>
+      <div class="kw-trust">
+        <div class="kw-trust-top"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 5 5v5c0 5 3.1 9.4 7 11 3.9-1.6 7-6 7-11V5l-7-3Zm0 4 3 1.3V10c0 3-1.7 5.8-3 6.7-1.3-.9-3-3.7-3-6.7V7.3L12 6Z"/></svg><p>Pagamento processado em ambiente seguro da AmploPay.</p></div>
+        <div class="kw-gateway-badge">Pagamento seguro · AmploPay</div>
+        <div class="kw-terms">Ao clicar em pagar, você confirma que leu e concorda com os <a href="#">Termos de Compra</a>, <a href="#">Termos de Uso</a> e <a href="#">Política de Privacidade</a>.</div>
+      </div>
+    </section>
+    <section class="kw-reviews">
+      <article><img class="review-avatar" src="assets/review-1.png" alt="Ana Paula"><div>“Os moldes são organizados e fáceis de imprimir. Já comecei minha primeira peça.”</div><b>★★★★★</b><small>Ana Paula · Campinas, SP</small></article>
+      <article><img class="review-avatar" src="assets/review-2.png" alt="Jéssica"><div>“O guia me ajudou a escolher os materiais sem desperdício.”</div><b>★★★★★</b><small>Jéssica · Curitiba, PR</small></article>
+      <article><img class="review-avatar" src="assets/review-3.png" alt="Renata"><div>“A coleção tem muitos estilos diferentes. Valeu muito a pena.”</div><b>★★★★★</b><small>Renata · Salvador, BA</small></article>
+    </section>
+  </main>
+  <script>
+    const baseAmount=10,methods=document.querySelectorAll('.kw-methods button'),paymentPanels={pix:document.querySelector('.pix-active'),card:document.querySelector('.card-active')},form=document.querySelector('#checkout-form'),total=document.querySelector('#order-total'),bumpSummary=document.querySelector('#bump-summary'),checkoutError=document.querySelector('#checkout-error');let selectedMethod='pix';const money=n=>'R$ '+n.toFixed(2).replace('.',',');
+    methods.forEach(button=>button.addEventListener('click',()=>{selectedMethod=button.dataset.method;methods.forEach(item=>item.classList.toggle('active',item===button));Object.entries(paymentPanels).forEach(([method,panel])=>panel.hidden=method!==selectedMethod)}));
+    function updateTotal(){let value=baseAmount;const selected=[...document.querySelectorAll('.bump-option.selected')];selected.forEach(item=>value+=Number(item.dataset.price));bumpSummary.innerHTML=selected.map(item=>'<div class="bump-line"><span>'+item.dataset.label+'</span><b>+ '+money(Number(item.dataset.price))+'</b></div>').join('');total.textContent=money(value)}
+    function toggleBump(item){item.classList.toggle('selected');item.setAttribute('aria-checked',String(item.classList.contains('selected')));updateTotal()}
+    document.querySelectorAll('.bump-option').forEach(item=>{item.addEventListener('click',()=>toggleBump(item));item.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleBump(item)}})});
+    form.addEventListener('submit',async event=>{event.preventDefault();checkoutError.textContent='';const email=document.querySelector('#customer-email');if(!email.value.trim()||!email.checkValidity()){email.focus();checkoutError.textContent='Informe um e-mail válido para continuar.';return}const submit=selectedMethod==='pix'?document.querySelector('#pay-pix'):document.querySelector('#pay-card'),initialText=submit.textContent;submit.disabled=true;submit.textContent='Gerando checkout seguro…';try{const response=await fetch('/api/checkout',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({customer:{email:email.value.trim(),phone:document.querySelector('#customer-phone').value.trim(),document:document.querySelector('#customer-document').value.trim()},bumpIds:[...document.querySelectorAll('.bump-option.selected')].map(item=>item.dataset.id),paymentMethod:selectedMethod==='card'?'CREDIT_CARD':'PIX'})}),payload=await response.json();if(!response.ok||!payload.checkoutUrl)throw new Error(payload.message||'Não foi possível iniciar o pagamento.');window.location.assign(payload.checkoutUrl)}catch(error){checkoutError.textContent=error.message||'Não foi possível iniciar o pagamento. Tente novamente.';submit.disabled=false;submit.textContent=initialText}});
+  </script>
+</body>
+</html>
