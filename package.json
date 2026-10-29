@@ -1,0 +1,1 @@
+{"name":"mesa-atelier","private":true,"version":"1.0.0","engines":{"node":"22.x"},"scripts":{"start":"node --env-file-if-exists=.env server.js","test":"node --test"}}

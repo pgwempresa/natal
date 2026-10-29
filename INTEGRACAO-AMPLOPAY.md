@@ -15,7 +15,7 @@ O checkout chama `POST /api/checkout`. O servidor calcula o valor por conta pró
 set -a
 source .env
 set +a
-python3 server.py
+npm start
 ```
 
 Abra `http://127.0.0.1:8765/checkout.html`. Sem as chaves, o botão mostra que a integração ainda precisa ser configurada. Com as chaves, ele cria uma transação via `POST /api/v1/gateway/pix/receive` e mostra o QR Code e o código Pix devolvidos pela AmploPay.
