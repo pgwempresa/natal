@@ -129,7 +129,9 @@ def request_amplopay(payload: dict) -> dict:
             message = None
         detail = message or raw_response[:500] or "Sem detalhes retornados pela AmploPay."
         print(f"[AmploPay] HTTP {error.code}: {detail}", file=sys.stderr, flush=True)
-        raise RuntimeError(f"AmploPay recusou a criação do checkout (HTTP {error.code}): {detail}") from error
+        raise RuntimeError(
+            f"Não foi possível criar o pagamento no gateway (HTTP {error.code}). Tente novamente em instantes."
+        ) from error
     except (URLError, TimeoutError) as error:
         raise RuntimeError("Não foi possível falar com a AmploPay. Tente novamente.") from error
     if not isinstance(result, dict) or not result.get("checkoutUrl"):
