@@ -35,7 +35,18 @@ test('CEP preenche endereço e permite preenchimento manual quando inexistente',
 test('checkout envia cartão uma vez, mantém método durante envio e limpa dados sensíveis',async()=>{
   let calls=0,resolveResponse,body;const ui=checkoutUI(async(url,options)=>{calls++;body=JSON.parse(options.body);return new Promise(resolve=>resolveResponse=resolve)});
   for(const [key,value] of Object.entries({name:'Teste',email:'teste@example.com',phone:'63999999999',document:'12345678909'}))ui.node('#customer-'+key).value=value;
-  for(const [key,value] of Object.entries({...input.card,...input.address,addressNumber:'1'}))ui.node('#card-'+key).value=value;
-  ui.methods[1].handlers.click();const submit=()=>ui.node('#checkout-form').handlers.submit({preventDefault(){}});const pending=submit();await submit();ui.methods[0].handlers.click();assert.equal(calls,1);assert.equal(body.paymentMethod,'CARD');assert.equal(body.address.number,'1');resolveResponse(new Response(JSON.stringify({transactionId:'test',cardStatus:'pending'})));await pending;
+  for(const [key,value] of Object.entries({...input.card,...input.address,addressNumber:'1',expiresAt:'12/30'}))ui.node('#card-'+key).value=value;
+  ui.methods[1].handlers.click();const submit=()=>ui.node('#checkout-form').handlers.submit({preventDefault(){}});const pending=submit();await submit();ui.methods[0].handlers.click();assert.equal(calls,1);assert.equal(body.paymentMethod,'CARD');assert.equal(body.card.expiresAt,'2030-12');assert.equal(body.address.number,'1');resolveResponse(new Response(JSON.stringify({transactionId:'test',cardStatus:'pending'})));await pending;
   assert.equal(ui.node('#pay-card').hidden,true);assert.equal(ui.node('#card-number').value,'');assert.equal(ui.node('#card-cvv').value,'');assert.match(ui.node('#card-status').textContent,/análise/);await submit();assert.equal(calls,1);
+});
+test('campos limitam colagem e validade aceita dígitos com barra automática',()=>{
+  const ui=checkoutUI(()=>{throw Error('não deveria consultar')});
+  for(const [id,raw,expected] of [['card-expiresAt','123099','12/30'],['card-cvv','12a3456','1234'],['card-number','41111111111111112222222','4111 1111 1111 1111 222'],['customer-document','12345678901234567890','12345678901234'],['card-state','são paulo','SO'],['customer-name','a'.repeat(200),'a'.repeat(160)]]){
+    const field=ui.node('#'+id);field.value=raw;field.handlers.input();assert.equal(field.value,expected);
+  }
+});
+test('servidor rejeita endereço e e-mail acima do limite antes de cobrar',async()=>{
+  for(const change of [{customer:{...input.customer,email:'a'.repeat(255)+'@example.com'}},{address:{...input.address,street:'a'.repeat(161)}}]){
+    let calls=0;await assert.rejects(createPix({...input,...change},{...options,fetchImpl:async()=>{calls++;throw Error()}}));assert.equal(calls,0);
+  }
 });
