@@ -91,6 +91,7 @@
       document.querySelector('#pix-code').value=code;
       document.querySelector('#pix-total').textContent=money(Number(payload.total)||baseAmount);
       document.querySelector('#pix-result').hidden=false;
+      document.querySelector('#pay-pix').hidden=true;
       document.querySelector('#pix-result').scrollIntoView({behavior:'smooth',block:'start'});
     }
     document.querySelector('#copy-pix').addEventListener('click',copyPixCode);
