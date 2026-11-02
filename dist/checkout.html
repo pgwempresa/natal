@@ -6,7 +6,7 @@
   <title>Finalizar compra · 300 Moldes de Mesa Posta</title>
   <link rel="stylesheet" href="style.css?v=44">
   <style>.kw-mp{display:block!important;width:96px!important;height:auto!important;margin:10px auto 0!important}</style>
-<script src="clarity.js" defer></script></head>
+<script src="clarity.js" defer></script><script src="meta-pixel.js" defer></script></head>
 <body class="kw-body">
   <main class="kw-page">
     <img class="kw-banner" src="assets/cover-300-moldes.webp" alt="300 moldes de mesa posta em PDF">
@@ -92,6 +92,7 @@
       document.querySelector('#pix-total').textContent=money(Number(payload.total)||baseAmount);
       document.querySelector('#pix-result').hidden=false;
       document.querySelector('#pay-pix').hidden=true;
+      window.atelieMeta?.purchase(payload);
       document.querySelector('#pix-result').scrollIntoView({behavior:'smooth',block:'start'});
     }
     document.querySelector('#copy-pix').addEventListener('click',copyPixCode);
@@ -127,7 +128,7 @@
         const payload=await response.json();if(!response.ok)throw new Error(payload.message||'Não foi possível iniciar o pagamento.');
         if(method==='pix'){showPix(payload)}else{
           if(!payload.transactionId||!['approved','pending'].includes(payload.cardStatus))throw Error('Resposta de pagamento inválida. Confira o painel antes de tentar novamente.');
-          cardSubmitted=true;document.querySelector('#card-status').textContent=payload.cardStatus==='approved'?'Pagamento aprovado!':'Pagamento recebido e em análise. Não repita a cobrança.';submit.hidden=true;
+          cardSubmitted=true;if(payload.cardStatus==='approved')window.atelieMeta?.purchase(payload);document.querySelector('#card-status').textContent=payload.cardStatus==='approved'?'Pagamento aprovado!':'Pagamento recebido e em análise. Não repita a cobrança.';submit.hidden=true;
         }
       }catch(error){checkoutError.textContent=error.message||'Não foi possível confirmar o pagamento. Confira antes de tentar novamente.';}
       finally{if(request.card){request.card.number='';request.card.cvv='';document.querySelector('#card-number').value='';document.querySelector('#card-cvv').value='';}submitting=false;submit.disabled=false;submit.innerHTML=initialHtml;methods.forEach(button=>button.disabled=false);document.querySelectorAll('.bump-option').forEach(item=>item.removeAttribute('aria-disabled'));}

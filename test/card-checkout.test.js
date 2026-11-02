@@ -24,7 +24,7 @@ function checkoutUI(fetchImpl){
   const methods=['pix','card'].map(method=>{const n=node(method);n.dataset.method=method;return n});
   const document={querySelector:node,querySelectorAll(selector){return selector==='.kw-methods button'?methods:[]}};
   const html=fs.readFileSync(require('node:path').join(__dirname,'../dist/checkout.html'),'utf8');
-  vm.runInNewContext(html.match(/<script>([\s\S]*?)<\/script>/)[1],{document,fetch:fetchImpl,AbortController,setTimeout,clearTimeout,navigator:{}});
+  vm.runInNewContext(html.match(/<script>([\s\S]*?)<\/script>/)[1],{window:{},document,fetch:fetchImpl,AbortController,setTimeout,clearTimeout,navigator:{}});
   return {node,methods};
 }
 test('CEP preenche endereço e permite preenchimento manual quando inexistente',async()=>{
