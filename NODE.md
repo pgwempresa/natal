@@ -10,4 +10,6 @@ Variáveis: `AMPLO_PUBLIC_KEY` e `AMPLO_SECRET_KEY`. Os nomes `AMPLOPAY_PUBLIC_K
 
 Execute `npm test` para verificar preços, contrato Pix, respostas inválidas e servidor local sem gerar cobranças reais.
 
-Esta migração preserva o Pix. O cartão continua indisponível. Gerar Pix não confirma pagamento; confirmação e entrega automática não estão implementadas nesta versão.
+O checkout aceita Pix e cartão de crédito em uma parcela, usando as rotas `/gateway/pix/receive` e `/gateway/card/receive`. O endereço de cobrança do cartão é preenchido pelo ViaCEP e pode ser corrigido manualmente. Na Vercel, o IP vem do cabeçalho da plataforma; localmente, da conexão HTTP.
+
+Os testes simulam aprovação, recusa, análise e falha de rede. A aprovação real ainda precisa ser validada na conta AmploPay. Gerar Pix não confirma pagamento. O cartão mostra a resposta inicial da operadora; consulta posterior de pagamentos em análise e entrega automática ainda não estão implementadas.
