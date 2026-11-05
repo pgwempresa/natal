@@ -1,6 +1,6 @@
 # Pixel e API de Conversões
 
-Pixel: `1817116509407691`.
+Pixel: `2545082356000318`.
 
 Na Vercel, adicione `META_ACCESS_TOKEN` com o token da API de Conversões do mesmo Pixel. O token fica somente no servidor. `META_PIXEL_ID` é opcional, pois este ID já é o padrão. Para usar Eventos de Teste, preencha temporariamente `META_TEST_EVENT_CODE`. Depois de alterar as variáveis, faça um novo deploy.
 
