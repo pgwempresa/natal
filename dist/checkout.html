@@ -17,8 +17,8 @@
       </div>
       <form id="checkout-form" novalidate>
         <div class="kw-fields" data-clarity-mask="True">
-          <label><span>Nome completo</span><input id="customer-name" maxlength="160" type="text" placeholder="Nome do comprador" autocomplete="name" required></label>
-          <label><span>E-mail</span><input id="customer-email" maxlength="254" type="email" placeholder="voce@exemplo.com" autocomplete="email" required></label>
+          <label><span>Nome completo</span><input id="customer-name" maxlength="80" type="text" placeholder="Nome do comprador" autocomplete="name" required></label>
+          <label><span>E-mail</span><input id="customer-email" maxlength="120" type="email" placeholder="voce@exemplo.com" autocomplete="email" required></label>
           <label><span>Telefone</span><input id="customer-phone" maxlength="20" type="tel" placeholder="(00) 00000-0000" autocomplete="tel"></label>
           <label><span>CPF ou CNPJ do comprador</span><input id="customer-document" maxlength="18" type="text" placeholder="000.000.000-00" inputmode="numeric"></label>
           <small>Informe os dados do responsável pela compra.</small>
@@ -26,29 +26,14 @@
         <div class="kw-summary">
           <div><span>300 Moldes de Mesa Posta</span><b>R$ 99,00</b></div>
           <div class="kw-discount"><span>Condição especial</span><b>- R$ 89,00</b></div>
-          <div id="bump-summary"></div>
           <div class="kw-total"><span>Total a pagar</span><strong id="order-total">R$ 10,00</strong></div>
-        </div>
-        <div class="kw-bumps">
-          <article class="bump-option" data-id="christmas" data-price="9.90" data-label="Moldes natalinos" role="checkbox" aria-checked="false" tabindex="0">
-            <strong>SIM, QUERO OS MOLDES NATALINOS! <small>+ R$ 9,90</small></strong>
-            <div><i>➜</i><em aria-hidden="true"></em><img class="bump-img" src="assets/bump-christmas-53ad72a9.webp" alt="Moldes natalinos"><p><b>OFERTA ESPECIAL:</b> modelos para Natal e fim de ano, prontos para imprimir.</p></div>
-          </article>
-          <article class="bump-option" data-id="guide" data-price="6.90" data-label="Guia de produção" role="checkbox" aria-checked="false" tabindex="0">
-            <strong>SIM, QUERO O GUIA DE PRODUÇÃO! <small>+ R$ 6,90</small></strong>
-            <div><i>➜</i><em aria-hidden="true"></em><img class="bump-img" src="assets/bump-guide-9a9d326b.webp" alt="Guia de produção"><p><b>GUIA PRÁTICO:</b> passo a passo para imprimir, montar e organizar seus moldes.</p></div>
-          </article>
-          <article class="bump-option" data-id="materials" data-price="7.90" data-label="Lista de materiais" role="checkbox" aria-checked="false" tabindex="0">
-            <strong>SIM, QUERO A LISTA DE MATERIAIS! <small>+ R$ 7,90</small></strong>
-            <div><i>➜</i><em aria-hidden="true"></em><img class="bump-img" src="assets/bump-materials-0681b507.webp" alt="Lista de materiais"><p><b>BÔNUS:</b> confira tudo o que separar antes de começar sua peça.</p></div>
-          </article>
         </div>
         <div class="kw-methods" aria-label="Forma de pagamento">
           <button type="button" class="active" data-method="pix" aria-label="Pagar com Pix"><img class="pix-icon" src="assets/pix-97f4b87e.webp" alt=""><b>Pix</b><small>Aprovação imediata</small></button>
           <button type="button" data-method="card" aria-label="Pagar com cartão"><svg class="card-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M2 10h20" stroke="currentColor" stroke-width="2"/></svg><b>Cartão</b><small>Crédito · 1x</small></button>
         </div>
         <div class="kw-payment pix-active"><button class="kw-pay" id="pay-pix" type="submit"><img class="pix-icon pay-pix-icon" src="assets/pix-97f4b87e.webp" alt="">Pagar agora</button></div>
-        <div class="kw-payment card-active" data-clarity-mask="True" hidden><p>Cartão de crédito · pagamento em 1 parcela</p><label style="display:block;margin:12px 0;font-size:14px">Nome impresso no cartão<input id="card-owner" maxlength="160" type="text" autocomplete="cc-name" style="display:block;width:100%;box-sizing:border-box;padding:12px;border:1px solid #ccd1d8;border-radius:6px;font:inherit"></label><label style="display:block;margin:12px 0;font-size:14px">Número do cartão<input id="card-number" type="text" inputmode="numeric" maxlength="23" autocomplete="cc-number" style="display:block;width:100%;box-sizing:border-box;padding:12px;border:1px solid #ccd1d8;border-radius:6px;font:inherit"></label><label style="display:block;margin:12px 0;font-size:14px">Validade<input id="card-expiresAt" type="text" inputmode="numeric" maxlength="5" placeholder="MM/AA" aria-label="Validade do cartão, mês e ano" autocomplete="cc-exp" style="display:block;width:100%;box-sizing:border-box;padding:12px;border:1px solid #ccd1d8;border-radius:6px;font:inherit"></label><label style="display:block;margin:12px 0;font-size:14px">CVV<input id="card-cvv" type="password" inputmode="numeric" maxlength="4" autocomplete="cc-csc" style="display:block;width:100%;box-sizing:border-box;padding:12px;border:1px solid #ccd1d8;border-radius:6px;font:inherit"></label><label style="display:block;margin:12px 0;font-size:14px">CEP<input id="card-zipCode" type="text" inputmode="numeric" maxlength="9" autocomplete="postal-code" style="display:block;width:100%;box-sizing:border-box;padding:12px;border:1px solid #ccd1d8;border-radius:6px;font:inherit"></label><label style="display:block;margin:12px 0;font-size:14px">Estado (UF)<input id="card-state" type="text" maxlength="2" autocomplete="address-level1" style="display:block;width:100%;box-sizing:border-box;padding:12px;border:1px solid #ccd1d8;border-radius:6px;font:inherit"></label><label style="display:block;margin:12px 0;font-size:14px">Cidade<input id="card-city" maxlength="100" type="text" autocomplete="address-level2" style="display:block;width:100%;box-sizing:border-box;padding:12px;border:1px solid #ccd1d8;border-radius:6px;font:inherit"></label><label style="display:block;margin:12px 0;font-size:14px">Rua<input id="card-street" maxlength="160" type="text" autocomplete="address-line1" style="display:block;width:100%;box-sizing:border-box;padding:12px;border:1px solid #ccd1d8;border-radius:6px;font:inherit"></label><label style="display:block;margin:12px 0;font-size:14px">Bairro<input id="card-neighborhood" maxlength="100" type="text" autocomplete="off" style="display:block;width:100%;box-sizing:border-box;padding:12px;border:1px solid #ccd1d8;border-radius:6px;font:inherit"></label><label style="display:block;margin:12px 0;font-size:14px">Número do endereço<input id="card-addressNumber" maxlength="20" type="text" autocomplete="off" style="display:block;width:100%;box-sizing:border-box;padding:12px;border:1px solid #ccd1d8;border-radius:6px;font:inherit"></label><p id="cep-status" role="status" aria-live="polite"></p><button class="kw-pay" id="pay-card" type="submit">Pagar com cartão</button><p id="card-status" role="status"></p></div>
+        <div class="kw-payment card-active" data-clarity-mask="True" hidden><p>Cartão de crédito · pagamento em 1 parcela</p><label style="display:block;margin:12px 0;font-size:14px">Nome impresso no cartão<input id="card-owner" maxlength="80" type="text" autocomplete="cc-name" style="display:block;width:100%;box-sizing:border-box;padding:12px;border:1px solid #ccd1d8;border-radius:6px;font:inherit"></label><label style="display:block;margin:12px 0;font-size:14px">Número do cartão<input id="card-number" type="text" inputmode="numeric" maxlength="23" autocomplete="cc-number" style="display:block;width:100%;box-sizing:border-box;padding:12px;border:1px solid #ccd1d8;border-radius:6px;font:inherit"></label><label style="display:block;margin:12px 0;font-size:14px">Validade<input id="card-expiresAt" type="text" inputmode="numeric" maxlength="5" placeholder="MM/AA" aria-label="Validade do cartão, mês e ano" autocomplete="cc-exp" style="display:block;width:100%;box-sizing:border-box;padding:12px;border:1px solid #ccd1d8;border-radius:6px;font:inherit"></label><label style="display:block;margin:12px 0;font-size:14px">CVV<input id="card-cvv" type="password" inputmode="numeric" maxlength="4" autocomplete="cc-csc" style="display:block;width:100%;box-sizing:border-box;padding:12px;border:1px solid #ccd1d8;border-radius:6px;font:inherit"></label><label style="display:block;margin:12px 0;font-size:14px">CEP<input id="card-zipCode" type="text" inputmode="numeric" maxlength="9" autocomplete="postal-code" style="display:block;width:100%;box-sizing:border-box;padding:12px;border:1px solid #ccd1d8;border-radius:6px;font:inherit"></label><label style="display:block;margin:12px 0;font-size:14px">Estado (UF)<input id="card-state" type="text" maxlength="2" autocomplete="address-level1" style="display:block;width:100%;box-sizing:border-box;padding:12px;border:1px solid #ccd1d8;border-radius:6px;font:inherit"></label><label style="display:block;margin:12px 0;font-size:14px">Cidade<input id="card-city" maxlength="100" type="text" autocomplete="address-level2" style="display:block;width:100%;box-sizing:border-box;padding:12px;border:1px solid #ccd1d8;border-radius:6px;font:inherit"></label><label style="display:block;margin:12px 0;font-size:14px">Rua<input id="card-street" maxlength="160" type="text" autocomplete="address-line1" style="display:block;width:100%;box-sizing:border-box;padding:12px;border:1px solid #ccd1d8;border-radius:6px;font:inherit"></label><label style="display:block;margin:12px 0;font-size:14px">Bairro<input id="card-neighborhood" maxlength="100" type="text" autocomplete="off" style="display:block;width:100%;box-sizing:border-box;padding:12px;border:1px solid #ccd1d8;border-radius:6px;font:inherit"></label><label style="display:block;margin:12px 0;font-size:14px">Número do endereço<input id="card-addressNumber" maxlength="20" type="text" autocomplete="off" style="display:block;width:100%;box-sizing:border-box;padding:12px;border:1px solid #ccd1d8;border-radius:6px;font:inherit"></label><p id="cep-status" role="status" aria-live="polite"></p><button class="kw-pay" id="pay-card" type="submit">Pagar com cartão</button><p id="card-status" role="status"></p></div>
         <p id="checkout-error" class="checkout-error" role="alert" aria-live="polite"></p>
         <section id="pix-result" data-clarity-mask="True" class="pix-result" hidden aria-live="polite">
           <h2>Pix gerado com sucesso</h2>
@@ -73,11 +58,8 @@
     </section>
   </main>
   <script>
-    const baseAmount=10,methods=document.querySelectorAll('.kw-methods button'),paymentPanels={pix:document.querySelector('.pix-active'),card:document.querySelector('.card-active')},form=document.querySelector('#checkout-form'),total=document.querySelector('#order-total'),bumpSummary=document.querySelector('#bump-summary'),checkoutError=document.querySelector('#checkout-error');let selectedMethod='pix',submitting=false,cardSubmitted=false;const money=n=>'R$ '+n.toFixed(2).replace('.',',');
+    const baseAmount=10,methods=document.querySelectorAll('.kw-methods button'),paymentPanels={pix:document.querySelector('.pix-active'),card:document.querySelector('.card-active')},form=document.querySelector('#checkout-form'),checkoutError=document.querySelector('#checkout-error');let selectedMethod='pix',submitting=false,cardSubmitted=false;const money=n=>'R$ '+n.toFixed(2).replace('.',',');
     methods.forEach(button=>button.addEventListener('click',()=>{if(submitting)return;selectedMethod=button.dataset.method;methods.forEach(item=>item.classList.toggle('active',item===button));Object.entries(paymentPanels).forEach(([method,panel])=>panel.hidden=method!==selectedMethod)}));
-    function updateTotal(){let value=baseAmount;const selected=[...document.querySelectorAll('.bump-option.selected')];selected.forEach(item=>value+=Number(item.dataset.price));bumpSummary.innerHTML=selected.map(item=>'<div class="bump-line"><span>'+item.dataset.label+'</span><b>+ '+money(Number(item.dataset.price))+'</b></div>').join('');total.textContent=money(value)}
-    function toggleBump(item){if(submitting||cardSubmitted)return;item.classList.toggle('selected');item.setAttribute('aria-checked',String(item.classList.contains('selected')));updateTotal()}
-    document.querySelectorAll('.bump-option').forEach(item=>{item.addEventListener('click',()=>toggleBump(item));item.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleBump(item)}})});
     async function copyPixCode(){
       const code=document.querySelector('#pix-code').value;
       try{await navigator.clipboard.writeText(code)}catch{const input=document.querySelector('#pix-code');input.select();document.execCommand('copy')}
@@ -96,7 +78,7 @@
       document.querySelector('#pix-result').scrollIntoView({behavior:'smooth',block:'start'});
     }
     document.querySelector('#copy-pix').addEventListener('click',copyPixCode);
-    const textLimits={"customer-name":160,"customer-email":254,"customer-phone":20,"customer-document":18,"card-owner":160,"card-city":100,"card-street":160,"card-neighborhood":100,"card-addressNumber":20};
+    const textLimits={"customer-name":80,"customer-email":120,"customer-phone":20,"customer-document":18,"card-owner":80,"card-city":100,"card-street":160,"card-neighborhood":100,"card-addressNumber":20};
     for(const [id,max] of Object.entries(textLimits)){const field=document.querySelector('#'+id);field.addEventListener('input',()=>field.value=field.value.slice(0,max));}
     for(const [id,max] of [['customer-phone',13],['customer-document',14],['card-cvv',4]]){const field=document.querySelector('#'+id);field.addEventListener('input',()=>field.value=field.value.replace(/\D/g,'').slice(0,max));}
     const cardNumber=document.querySelector('#card-number');cardNumber.addEventListener('input',()=>cardNumber.value=cardNumber.value.replace(/\D/g,'').slice(0,19).replace(/(.{4})(?=.)/g,'$1 '));
@@ -117,9 +99,11 @@
     form.addEventListener('submit',async event=>{
       event.preventDefault();if(submitting||(selectedMethod==='card'&&cardSubmitted))return;
       checkoutError.textContent='';const method=selectedMethod;
+      for(const [id,max] of Object.entries(textLimits)){if(id.startsWith('card-')&&method!=='card')continue;const field=document.querySelector('#'+id);if(field.value.length>max){checkoutError.textContent='Respeite o limite de '+max+' caracteres deste campo.';field.focus();return;}}
+
       const name=document.querySelector('#customer-name'),email=document.querySelector('#customer-email'),phone=document.querySelector('#customer-phone'),documentInput=document.querySelector('#customer-document');
       if(!name.value.trim()||!email.value.trim()||!email.checkValidity()||!phone.value.trim()||!documentInput.value.trim()){checkoutError.textContent='Preencha nome, e-mail, telefone e CPF ou CNPJ para continuar.';return;}
-      const request={customer:{name:name.value.trim(),email:email.value.trim(),phone:phone.value.trim(),document:documentInput.value.trim()},bumpIds:[...document.querySelectorAll('.bump-option.selected')].map(item=>item.dataset.id),paymentMethod:method==='pix'?'PIX':'CARD'};
+      const request={customer:{name:name.value.trim(),email:email.value.trim(),phone:phone.value.trim(),document:documentInput.value.trim()},paymentMethod:method==='pix'?'PIX':'CARD'};
       if(method==='card'){
         const fields=['owner','number','expiresAt','cvv','zipCode','state','city','street','neighborhood','addressNumber'];
         for(const key of fields){const field=document.querySelector('#card-'+key);if(!field.value.trim()){checkoutError.textContent='Preencha todos os dados do cartão e do endereço de cobrança.';field.focus();return;}}
@@ -131,7 +115,6 @@
       }
       const submit=document.querySelector(method==='pix'?'#pay-pix':'#pay-card'),initialHtml=submit.innerHTML;
       submitting=true;submit.disabled=true;submit.textContent='Processando pagamento…';methods.forEach(button=>button.disabled=true);
-      document.querySelectorAll('.bump-option').forEach(item=>item.setAttribute('aria-disabled','true'));
       try{
         const response=await fetch('/api/checkout',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(request)});
         const payload=await response.json();if(!response.ok)throw new Error(payload.message||'Não foi possível iniciar o pagamento.');
@@ -140,7 +123,7 @@
           cardSubmitted=true;if(payload.cardStatus==='approved')window.atelieMeta?.purchase(payload);document.querySelector('#card-status').textContent=payload.cardStatus==='approved'?'Pagamento aprovado!':'Pagamento recebido e em análise. Não repita a cobrança.';submit.hidden=true;
         }
       }catch(error){checkoutError.textContent=error.message||'Não foi possível confirmar o pagamento. Confira antes de tentar novamente.';}
-      finally{if(request.card){request.card.number='';request.card.cvv='';document.querySelector('#card-number').value='';document.querySelector('#card-cvv').value='';}submitting=false;submit.disabled=false;submit.innerHTML=initialHtml;methods.forEach(button=>button.disabled=false);document.querySelectorAll('.bump-option').forEach(item=>item.removeAttribute('aria-disabled'));}
+      finally{if(request.card){request.card.number='';request.card.cvv='';document.querySelector('#card-number').value='';document.querySelector('#card-cvv').value='';}submitting=false;submit.disabled=false;submit.innerHTML=initialHtml;methods.forEach(button=>button.disabled=false);}
 
     });
   </script>
